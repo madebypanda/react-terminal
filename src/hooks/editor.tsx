@@ -158,12 +158,14 @@ export const useBufferedContent = (
           const commandArguments = rest.join(" ");
 
           if (command && commands[command]) {
-            const executor = commands[command];
+            const executors = commands[command];
 
-            if (typeof executor === "function") {
-              output = await executor(commandArguments);
-            } else {
-              output = executor;
+            for (let executor of executors) {
+              if (typeof executor === "function") {
+                output = await executor(commandArguments);
+              } else {
+                output = executor;
+              }
             }
           } else if (typeof defaultHandler === "function") {
             output = await defaultHandler(command, commandArguments);
